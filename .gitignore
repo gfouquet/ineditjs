@@ -1,0 +1,5 @@
+/node_modules/
+/.project
+/.settings/
+/lib/
+/bower_components/

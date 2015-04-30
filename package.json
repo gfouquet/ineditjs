@@ -1,0 +1,44 @@
+{
+  "name": "ineditjs",
+  "version": "0.1.0",
+  "homepage": "https://github.com/gfouquet/ineditjs",
+  "author": {
+    "name": "Gregory Fouquet"
+  },
+  "description": "An in place editor based on jquery",
+  "main": "lib/inedit.js",
+  "keywords": [
+    "ineditjs",
+    "inedit",
+    "in",
+    "place",
+    "editor"
+  ],
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "scripts": {
+    "test": "grunt jasmine",
+    "start": "grunt jasmine-server"
+  },
+  "devDependencies": {
+    "bower": "^1.4.1",
+    "grunt": "~0.4.1",
+    "grunt-bower-requirejs": "^2.0.0",
+    "grunt-contrib-concat": "0.1.3",
+    "grunt-contrib-connect": "0.2.0",
+    "grunt-contrib-jasmine": "0.8.2",
+    "grunt-contrib-jshint": "0.2.0",
+    "grunt-contrib-uglify": "0.1.2",
+    "grunt-contrib-watch": "0.3.1",
+    "grunt-jscs": "^1.8.0",
+    "grunt-preprocess": "4.0.0",
+    "grunt-template": "^0.2.3",
+    "jasmine-sinon": "0.3.1",
+    "load-grunt-tasks": "3.1.0",
+    "requirejs": "~2.1.0",
+    "sinon": "1.9.0"
+  }
+}

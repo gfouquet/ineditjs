@@ -1,0 +1,39 @@
+{
+  "name": "ineditjs",
+  "version": "0.1.0",
+  "homepage": "https://github.com/gfouquet/ineditjs",
+  "authors": [
+    "Gregory Fouquet"
+  ],
+  "description": "An in place editor based on jquery",
+  "main": "lib/inedit.js",
+  "keywords": [
+    "ineditjs", 
+    "inedit", 
+    "in", 
+    "place", 
+    "editor"
+  ],
+  "dependencies": {
+    "jquery": "~2.0.0"
+  },
+  "devDependencies": {
+    "requirejs": "~2.1.0"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "public",
+    "specs",
+    ".gitignore",
+    ".jshintrc",
+    ".travis.yml",
+    "Gruntfile.js",
+    "component.json",
+    "package.json"
+  ]
+}
