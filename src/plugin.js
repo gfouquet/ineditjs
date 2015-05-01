@@ -2,7 +2,7 @@
 function Plugin(config) {
   return this.each(function () {
     var $this = $(this);
-    var inst = $this.data("ind.inst");
+    var inst = $this.data("ind-inst");
     var options = $.extend({}, InEdit.DEFAULTS, $this.data(), typeof config === "object" && config);
 
     if (!inst) $this.data("ind-inst", new InEdit(this, options));

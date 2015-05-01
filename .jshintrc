@@ -18,6 +18,7 @@
     "define": true,
     "exports": true,
     "InEdit": true,
+    "Template": true,
     "console": true
   }
 }

@@ -1,26 +1,28 @@
-function InEdit(element, options) {
-  this.el = element;
+function InEdit(el, options) {
+  this.el = el;
+  this.$el = $(el);
+  this.options = options;
   // this.options = $.extend({}, pluginDefaults, options);
   // this._defaults = pluginDefaults;
   // this._name = pluginName;
-  this.init();
+  this.tpl = new Template(this.options);
+  this.initialize();
 }
 
 InEdit.VERSION = "<%= version %>";
 
-InEdit.DEFAULTS = {};
+InEdit.DEFAULTS = {
+  ok: "ok",
+  cancel: "cancel",
+  viewEl: "span",
+  viewClass: ""
+};
 
-InEdit.prototype = {
-  init: function () {
-    // Place initialization logic here
-    // You already have access to the DOM element and
-    // the options via the instance, e.g. this.element
-    // and this.options
-    // you can add more functions like the one below and
-    // call them like so: this.yourOtherFunction(this.element, this.options).
-    console.log("xD");
-  },
-  yourOtherFunction: function () {
-    // some logic
-  }
+InEdit.prototype.initialize = function () {
+  this.template = new Template(this.options);
+  console.log(this.$el);
+
+  this.$el.after(this.tpl.view(this.$el.val()))
+    .after(this.tpl.ok())
+    .after(this.tpl.cancel());
 };

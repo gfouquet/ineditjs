@@ -1,8 +1,13 @@
 require.config({
-  shim: {},
+  shim: {
+
+  },
   paths: {
     jquery: "../bower_components/jquery/jquery",
     requirejs: "../bower_components/requirejs/require"
   },
-  packages: []
+  packages: [
+
+  ]
 });
+require(["../lib/inedit.js"]);
