@@ -1,5 +1,5 @@
 module.exports = function (grunt) {
-  require('load-grunt-tasks')(grunt);
+  require("load-grunt-tasks")(grunt);
 
   grunt.initConfig({
 
@@ -14,26 +14,26 @@ module.exports = function (grunt) {
 
     bowerRequirejs: {
       target: {
-        rjsConfig: 'demo/demo.js'
+        rjsConfig: "demo/demo.js"
       }
     },
 
     preprocess: {
       umd: {
-        src: 'src/umd/inedit.js',
-        dest: 'lib/inedit.js'
+        src: "src/umd/inedit.js",
+        dest: "lib/inedit.js"
       }
     },
 
     template: {
       options: {
         data: {
-          version: '<%= pkg.version %>'
+          version: "<%= pkg.version %>"
         }
       },
       umd: {
-        src: '<%= preprocess.umd.dest %>',
-        dest: '<%= preprocess.umd.dest %>'
+        src: "<%= preprocess.umd.dest %>",
+        dest: "<%= preprocess.umd.dest %>"
       }
     },
 
@@ -62,6 +62,13 @@ module.exports = function (grunt) {
       src: "src/*.js"
     },
 
+    watch: {
+      scripts: {
+        files: ["src/**/*.js", "src/*.js"],
+        tasks: ["preprocess", "template"]
+      }
+    },
+
     // Minify definitions
     uglify: {
       my_target: {
@@ -71,12 +78,12 @@ module.exports = function (grunt) {
       options: {
         banner: "<%= meta.banner %>"
       }
-    },
+    }
 
   });
   grunt.registerTask("default", ["jshint", "jscs", "preprocess", "template"]);
-  grunt.registerTask("demo", ["bowerRequirejs"]);
-  // grunt.registerTask("default", [ "jshint", "concat", "uglify" ]);
+  grunt.registerTask("lib", ["preprocess", "template"]);
+  grunt.registerTask("demo", ["bowerRequirejs", "lib"]);
   grunt.registerTask("travis", ["jshint"]);
 
 };
