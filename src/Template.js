@@ -9,29 +9,34 @@ function compileTpl(tpl) {
   };
 }
 
-var viewTpl = compileTpl("<{{el}} class='ind-view {{class}}'>{{label}}</{{el}}>");
-var btnTpl = compileTpl("<input type='button' class='ind-btn ind-btn-{{type}}' value='{{label}}' />");
+var viewTpl = compileTpl("<{{el}} class='ind-view {{class}}' data-ind-id='{{widgetId}}'>{{label}}</{{el}}>");
+var btnTpl = compileTpl("<input type='button' class='ind-btn ind-btn-{{type}}' value='{{label}}' data-ind-id='{{widgetId}}' />");
 
-function makeBtn(type, config) {
+function makeBtn(type, widgetId, config) {
   return function () {
     var configType = typeof config;
 
     if (configType === undefined) return undefined;
-    if (configType === "string") return btnTpl({ type: type, label: config });
+    if (configType === "string") return btnTpl({ type: type, widgetId: widgetId, label: config });
 
     throw "Button '" + type + "' with config '" + config + " of type '" + configType + "' not supported";
   };
 }
 
-function Template(options) {
-  this.options = options;
-  this.ok = makeBtn("ok", this.options.ok);
-  this.cancel = makeBtn("cancel", this.options.cancel);
+function Template(widgetId, options) {
+  this.options = $.extend({ widgetId: widgetId }, options);
+  this.ok = makeBtn("ok", widgetId, this.options.ok);
+  this.cancel = makeBtn("cancel", widgetId, this.options.cancel);
   console.log("template options", options);
 }
 
 Template.prototype.view = function (label) {
-  return viewTpl({ label: label, el: this.options.viewEl, class: this.options.viewClass });
+  return viewTpl({
+    label: label,
+    el: this.options.viewEl,
+    class: this.options.viewClass,
+    widgetId: this.options.widgetId
+  });
 };
 
 

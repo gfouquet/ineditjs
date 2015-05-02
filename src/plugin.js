@@ -7,7 +7,7 @@ function Plugin(config) {
 
     if (!inst) $this.data("ind-inst", new InEdit(this, options));
 
-    if (typeof options === "string") inst[options].apply(inst);
+    if (typeof config === "string") inst[config].apply(inst);
   });
 }
 
