@@ -4,24 +4,37 @@
   <title>inedit.js demo</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+  <!--<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"-->
+        <!--type="text/css" rel="stylesheet"/>-->
   <script src="../bower_components/requirejs/require.js" data-main="demo"></script>
   <style>
     .inedit, .ind-btn {
       display: none;
     }
+
     .inedit.editing, .ind-btn.editing {
       display: inline-block;
     }
+
     .ind-view {
       border: thin solid black;
     }
-    .ind-view.editing {
+
+    .ind-view.editing, .ind-view.validating {
       display: none;
+    }
+
+    .ind-spinner, .ind-spinner.editing {
+      display: none;
+    }
+
+    .ind-spinner.validating {
+      display: inline-block;
     }
   </style>
 </head>
 <body>
-<div class="container-fluid" >
+<div class="container-fluid">
   <h2>Inputs</h2>
 
   <form class="form-horizontal row">
@@ -29,7 +42,9 @@
       <label for="text-input" class="col-md-1 control-label">Text</label>
 
       <div class="col-md-2">
-        <input type="text" class="form-control inedit" value="text content" placeholder="Text" data-view-el="p" data-view-class="form-control-static" />
+        <input type="text" class="form-control inedit" value="text content" placeholder="Text" data-view-el="p"
+               data-view-class="form-control-static"
+               />
       </div>
     </div>
   </form>
