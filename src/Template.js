@@ -11,7 +11,7 @@ function compileTpl(tpl) {
 
 var viewTpl = compileTpl("<{{el}} class='ind-view {{class}}' data-ind-id='{{widgetId}}'>{{label}}</{{el}}>");
 var btnTpl = compileTpl("<input type='button' class='ind-btn ind-btn-{{type}}' value='{{label}}' data-ind-id='{{widgetId}}' />");
-var spinnerTpl = compileTpl("<img class='ind-spinner {{class}}' src='{{url}}' data-ind-id='{{widgetId}}'></img>");
+var spinnerTpl = compileTpl("<img class='ind-spinner {{class}}' src='{{url}}' data-ind-id='{{widgetId}}' />");
 
 function makeBtn(type, widgetId, config) {
   return function () {
@@ -42,6 +42,6 @@ Template.prototype.view = function (label) {
 
 Template.prototype.spinner = function () {
   return spinnerTpl({ widgetId: this.options.widgetId, class: this.options.spinnerClass, url: this.options.spinnerUrl });
-}
+};
 
 

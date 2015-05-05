@@ -1,31 +1,22 @@
-$(document).on("click", ".ind-view", function(event) {
-  console.log("onclick .ind-view")
-  console.log(event.currentTarget)
+/**
+ * Returns the `.inedit` $element which matches the given event target
+ * @param event a DOM event triggered by an `.inedit` sub-element
+ * @returns {*|jQuery|HTMLElement}
+ */
+function $tgtInd(event) {
+  return $(".inedit[data-ind-id=" + event.currentTarget.getAttribute("data-ind-id") + "]");
+}
 
-  var $tgt = $(event.currentTarget);
-  var $ind = $(".inedit[data-ind-id=" + $tgt.data("indId") + "]");
-  console.log("ind", $ind);
-  $ind.inedit("edit", event);
+$(document).on("click", ".ind-view", function(event) {
+  $tgtInd(event).inedit("edit", event);
 });
 
 $(document).on("click", ".ind-btn.ind-btn-ok", function(event) {
-  console.log("onclick .ind-ok", $(".edit"))
-  console.log(event.currentTarget)
-
-  var $tgt = $(event.currentTarget);
-  var $ind = $(".inedit[data-ind-id=" + $tgt.data("indId") + "]");
-  console.log("ind", $ind);
-  $ind.inedit("submit", event);
+  $tgtInd(event).inedit("submit", event);
 });
 
 $(document).on("click", ".ind-btn.ind-btn-cancel", function(event) {
-  console.log("onclick .ind-ok", $(".edit"))
-  console.log(event.currentTarget)
-
-  var $tgt = $(event.currentTarget);
-  var $ind = $(".inedit[data-ind-id=" + $tgt.data("indId") + "]");
-  console.log("ind", $ind);
-  $ind.inedit("cancel", event);
+  $tgtInd(event).inedit("cancel", event);
 });
 
 $(function() {
