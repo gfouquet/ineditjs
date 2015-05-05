@@ -7,8 +7,6 @@ function InEdit(el, options) {
   this.widgetId = "ind-" + (++widgetCount);
   this.$el.attr("data-ind-id", this.widgetId);
   this.tpl = new Template(this.widgetId, this.options);
-  this.rollback = this.rollback.bind(this);
-  this.commit = this.commit.bind(this);
   this.initialize();
 
   console.log("widgetId", this.widgetId);
@@ -26,6 +24,10 @@ InEdit.DEFAULTS = {
   async: true
 };
 
+function indIdSelector(ind) {
+  return "[data-ind-id=" + ind.widgetId + "]";
+}
+
 InEdit.prototype.initialize = function () {
   console.log(this.$el);
 
@@ -34,11 +36,11 @@ InEdit.prototype.initialize = function () {
     .after(this.tpl.cancel())
     .after(this.tpl.spinner());
 
-  var idSelector = "[data-ind-id=" + this.widgetId + "]";
-  this.$view = $(".ind-view" + idSelector);
-  this.$ok = $(".ind-btn-ok" + idSelector);
-  this.$cancel = $(".ind-btn-cancel" + idSelector);
-  this.$spinner = $(".ind-spinner" + idSelector);
+  var sel = indIdSelector(this);
+  this.$view = $(".ind-view" + sel);
+  this.$ok = $(".ind-btn-ok" + sel);
+  this.$cancel = $(".ind-btn-cancel" + sel);
+  this.$spinner = $(".ind-spinner" + sel);
 };
 
 InEdit.prototype.subelems = function () {
@@ -62,25 +64,30 @@ InEdit.prototype.submit = function (event) {
       .removeClass("editing");
   });
 
-  var state = $.Deferred();
-  state.done(this.commit.bind(this))
-    .fail(this.rollback.bind(this));
+  if (this.options.async === true) {
+    var state = $.Deferred();
+    state.done(this.commit.bind(this))
+      .fail(this.rollback.bind(this));
 
-  this.$el.trigger("inedit:validate", {
-    source: event,
-    widget: this,
-    widgetId: this.widgetId,
-    value: newValue,
-    previous: previousValue,
-    state: state
-  });
+    this.$el.trigger("inedit:validate", {
+      source: event,
+      widget: this,
+      widgetId: this.widgetId,
+      value: newValue,
+      previous: previousValue,
+      state: state
+    });
+  } else {
+    this.commit(event);
+  }
+
 };
 
 InEdit.prototype.cancel = function (event) {
   console.log("cancel", arguments);
   this.$el.val(this.$el.attr("value"));
   this.subelems().forEach(function ($item) {
-    $item.removeClass("editing");
+    $item.removeClass("editing validating");
   });
 };
 
@@ -89,14 +96,23 @@ InEdit.prototype.rollback = function () {
 };
 
 InEdit.prototype.commit = function () {
-  this.$el.attr("value", this.$el.val());
+  var newValue = this.$el.val();
+  var previousValue = this.$el.attr("value");
+  this.$el.attr("value", newValue);
   this.$view.remove();
-  this.$el.after(this.tpl.view(this.$el.val()));
+  this.$el.after(this.tpl.view(newValue));
 
-  var idSelector = "[data-ind-id=" + this.widgetId + "]";
-  this.$view = $(".ind-view" + idSelector);
+  this.$view = $(".ind-view" + indIdSelector(this));
 
   this.subelems().forEach(function ($item) {
     $item.removeClass("validating");
+  });
+
+  this.$el.trigger("inedit:commit", {
+    source: arguments[0],
+    widget: this,
+    widgetId: this.widgetId,
+    value: newValue,
+    previous: previousValue
   });
 };
