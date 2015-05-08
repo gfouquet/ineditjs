@@ -7,7 +7,7 @@ function $tgtInd(event) {
   return $(".inedit[data-ind-id=" + event.currentTarget.getAttribute("data-ind-id") + "]");
 }
 
-$(document).on("click", ".ind-view", function(event) {
+$(document).on("click", ".ind-view:not(.ind-static)", function(event) {
   $tgtInd(event).inedit("edit", event);
 });
 

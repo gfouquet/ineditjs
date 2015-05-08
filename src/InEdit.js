@@ -1,12 +1,27 @@
 var widgetCount = 0;
 
+/**
+ * Builds the options to pass to a Template from an *inedit*'s options
+ * @param widgetOpts
+ * @returns {*}
+ */
+function tplOpts(widgetOpts) {
+  var opts = $.extend({}, widgetOpts);
+  if (opts.disabled) {
+    opts.viewClass = opts.viewClass + " ind-static";
+    opts.ok = undefined;
+    opts.cancel = undefined;
+  }
+  return opts;
+}
+
 function InEdit(el, options) {
   this.el = el;
   this.$el = $(el);
-  this.options = options;
+  this.options = $.extend({}, options);
   this.widgetId = "ind-" + (++widgetCount);
   this.$el.attr("data-ind-id", this.widgetId);
-  this.tpl = new Template(this.widgetId, this.options);
+  this.tpl = new Template(this.widgetId, tplOpts(this.options));
   this.initialize();
 
   console.log("widgetId", this.widgetId);
@@ -21,7 +36,8 @@ InEdit.DEFAULTS = {
   viewClass: "",
   spinnerUrl: "spinner.gif", // http://preloaders.net/en/circular/2
   spinnerClass: "",
-  async: true
+  async: true,
+  disabled: false
 };
 
 function indIdSelector(ind) {
