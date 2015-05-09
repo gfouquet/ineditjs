@@ -52,10 +52,13 @@ function Template(widgetId, options) {
 
 /**
  * Generates the non-editable view
- * @param label
+ * @param label the label to print. Will be printed as-is (i.e. html has to be escaped beforehand when needed) except
+ * when `label` an empty string. In this case, `options.viewPlaceholder` will be used instead.
  * @returns {*} The html string for the view
  */
 Template.prototype.view = function (label) {
+  label = label.length === 0 ? this.options.viewPlaceholder : label;
+
   return viewTpl({
     label: label,
     el: this.options.viewEl,

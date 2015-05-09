@@ -41,7 +41,8 @@ InEdit.DEFAULTS = {
   spinnerUrl: "spinner.gif", // http://preloaders.net/en/circular/2
   spinnerClass: "",
   async: true,
-  disabled: false
+  disabled: false,
+  viewPlaceholder: "Click to edit..."
 };
 
 function indIdSelector(ind) {
