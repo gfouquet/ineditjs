@@ -48,6 +48,13 @@ function indIdSelector(ind) {
   return "[data-ind-id=" + ind.widgetId + "]";
 }
 
+function $subelems(ind) {
+  var idSel = indIdSelector(ind);
+  return $(".inedit" + idSel + ", .ind-view" + idSel +
+    ", .ind-btn-ok" + idSel + ", .ind-btn-cancel" + idSel +
+    ", .ind-spinner" + idSel);
+}
+
 InEdit.prototype.initialize = function () {
   console.log(this.$el);
 
@@ -55,24 +62,11 @@ InEdit.prototype.initialize = function () {
     .after(this.tpl.ok())
     .after(this.tpl.cancel())
     .after(this.tpl.spinner());
-
-  var sel = indIdSelector(this);
-  // TODO no real need to cache, slap this in subelems with an 'or' $ selector
-  this.$view = $(".ind-view" + sel);
-  this.$ok = $(".ind-btn-ok" + sel);
-  this.$cancel = $(".ind-btn-cancel" + sel);
-  this.$spinner = $(".ind-spinner" + sel);
-};
-
-InEdit.prototype.subelems = function () {
-  return [this.$view, this.$ok, this.$cancel, this.$el, this.$spinner];
 };
 
 InEdit.prototype.edit = function (event) {
   console.log("edit", arguments);
-  this.subelems().forEach(function ($item) {
-    $item.addClass("editing");
-  });
+  $subelems(this).addClass("editing");
 };
 
 InEdit.prototype.submit = function (event) {
@@ -80,10 +74,8 @@ InEdit.prototype.submit = function (event) {
   var newValue = this.$el.val();
   var previousValue = this.$el.attr("value");
 
-  this.subelems().forEach(function ($item) {
-    $item.addClass("validating")
-      .removeClass("editing");
-  });
+  $subelems(this).addClass("validating")
+    .removeClass("editing");
 
   if (this.options.async === true) {
     var state = $.Deferred();
@@ -107,9 +99,7 @@ InEdit.prototype.submit = function (event) {
 InEdit.prototype.cancel = function (event) {
   console.log("cancel", arguments);
   this.$el.val(this.$el.attr("value"));
-  this.subelems().forEach(function ($item) {
-    $item.removeClass("editing validating");
-  });
+  $subelems(this).removeClass("editing validating");
 };
 
 InEdit.prototype.rollback = function () {
@@ -120,14 +110,10 @@ InEdit.prototype.commit = function () {
   var newValue = this.$el.val();
   var previousValue = this.$el.attr("value");
   this.$el.attr("value", newValue);
-  this.$view.remove();
+  $(".ind-view" + indIdSelector(this)).remove();
   this.$el.after(this.tpl.view(escapeHtml(newValue)));
 
-  this.$view = $(".ind-view" + indIdSelector(this));
-
-  this.subelems().forEach(function ($item) {
-    $item.removeClass("validating");
-  });
+  $subelems(this).removeClass("validating");
 
   this.$el.trigger("inedit:commit", {
     source: arguments[0],
