@@ -28,7 +28,7 @@ function makeBtn(type, widgetId, render) {
   return function () {
     var configType = typeof render;
 
-    if (configType === undefined) return undefined;
+    if (configType === "undefined") return undefined;
     if (configType === "string") return btnTpl({ type: type, widgetId: widgetId, label: render });
 
     throw "Button '" + type + "' with config '" + render + " of type '" + configType + "' not supported";
