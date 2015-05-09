@@ -15,6 +15,10 @@ function tplOpts(widgetOpts) {
   return opts;
 }
 
+function escapeHtml(s) {
+  return $("<div></div>").text(s).html();
+}
+
 function InEdit(el, options) {
   this.el = el;
   this.$el = $(el);
@@ -47,12 +51,13 @@ function indIdSelector(ind) {
 InEdit.prototype.initialize = function () {
   console.log(this.$el);
 
-  this.$el.after(this.tpl.view(this.$el.val()))
+  this.$el.after(this.tpl.view(escapeHtml(this.$el.val())))
     .after(this.tpl.ok())
     .after(this.tpl.cancel())
     .after(this.tpl.spinner());
 
   var sel = indIdSelector(this);
+  // TODO no real need to cache, slap this in subelems with an 'or' $ selector
   this.$view = $(".ind-view" + sel);
   this.$ok = $(".ind-btn-ok" + sel);
   this.$cancel = $(".ind-btn-cancel" + sel);
@@ -116,7 +121,7 @@ InEdit.prototype.commit = function () {
   var previousValue = this.$el.attr("value");
   this.$el.attr("value", newValue);
   this.$view.remove();
-  this.$el.after(this.tpl.view(newValue));
+  this.$el.after(this.tpl.view(escapeHtml(newValue)));
 
   this.$view = $(".ind-view" + indIdSelector(this));
 
