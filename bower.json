@@ -8,17 +8,18 @@
   "description": "An in place editor based on jquery",
   "main": "lib/inedit.js",
   "keywords": [
-    "ineditjs", 
-    "inedit", 
-    "in", 
-    "place", 
+    "ineditjs",
+    "inedit",
+    "in",
+    "place",
     "editor"
   ],
   "dependencies": {
     "jquery": "~2.0.0"
   },
   "devDependencies": {
-    "requirejs": "~2.1.0"
+    "requirejs": "~2.1.0",
+    "webshim": "~1.15.7"
   },
   "license": "MIT",
   "ignore": [
