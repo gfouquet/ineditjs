@@ -13,8 +13,11 @@ module.exports = function (grunt) {
     },
 
     bowerRequirejs: {
-      target: {
+      demo: {
         rjsConfig: "demo/demo.js"
+      },
+      test: {
+        rjsConfig: "test/test-main.js"
       }
     },
 
@@ -69,6 +72,14 @@ module.exports = function (grunt) {
       }
     },
 
+    // Tests runner
+    karma: {
+      unit: {
+        configFile: 'test/karma.conf.js',
+        singleRun: true
+      }
+    },
+
     // Minify definitions
     uglify: {
       my_target: {
@@ -81,7 +92,8 @@ module.exports = function (grunt) {
     }
 
   });
-  grunt.registerTask("default", ["jshint", "jscs", "preprocess", "template"]);
+  grunt.registerTask("default", ["test", "preprocess", "template"]);
+  grunt.registerTask("test", ["jshint", "jscs", "karma"]);
   grunt.registerTask("lib", ["preprocess", "template"]);
   grunt.registerTask("demo", ["bowerRequirejs", "lib"]);
   grunt.registerTask("travis", ["jshint"]);
