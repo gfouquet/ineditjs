@@ -24,6 +24,7 @@ module.exports = function (config) {
     files: [
       { pattern: "bower_components/jquery/jquery.js", included: false },
       { pattern: "test/spec/**/*.js", included: false },
+      { pattern: "src/**/*.js", included: false },
 
       // Only this file is loaded through <script> tag
       { pattern: "test/test-main.js", included: true },
@@ -63,7 +64,7 @@ module.exports = function (config) {
 
     // level of logging
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_INFO,
 
     // Uncomment the following lines if you are using grunt's server to run the tests
     // proxies: {

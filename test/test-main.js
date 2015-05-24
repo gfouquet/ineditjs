@@ -17,9 +17,20 @@ console.log("Test files", allTestFiles);
 require.config({
   // Karma serves files under /base, which is the basePath from your config file
   baseUrl: "/base",
-  shim: {},
+  shim: {
+    Template: {
+      deps: ["jquery"],
+      exports: "Template"
+    },
+    InEdit: {
+      deps: ["jquery", "Template"],
+      exports: "InEdit"
+    }
+  },
   paths: {
     jquery: "bower_components/jquery/jquery",
+    Template: "src/Template",
+    InEdit: "src/InEdit"
   },
   packages: [],
 
