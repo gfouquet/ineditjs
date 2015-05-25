@@ -26,7 +26,7 @@ function indIdSelector(ind) {
 }
 
 function buildView(ind) {
-  return ind.tpl.view(ind.coerce(ind.$el.val(), ind.options));
+  return ind.coerce(ind.$el.val(), ind.options);
 }
 
 function $subelems(ind) {
@@ -72,7 +72,7 @@ InEdit.prototype.initialize = function () {
   console.log("ok", this.tpl.ok())
   console.log("opts", this.options)
 
-  this.$el.after(buildView(this))
+  this.$el.after(this.tpl.view(buildView(this)))
     .after(this.tpl.ok())
     .after(this.tpl.cancel())
     .after(this.tpl.spinner());
