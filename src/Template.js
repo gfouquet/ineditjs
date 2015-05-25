@@ -57,7 +57,8 @@ function Template(widgetId, options) {
  * @returns {*} The html string for the view
  */
 Template.prototype.view = function (label) {
-  label = label.length === 0 ? this.options.viewPlaceholder : label;
+  label = label === "" ? this.options.viewPlaceholder : label;
+  console.log("view label", label);
 
   return viewTpl({
     label: label,

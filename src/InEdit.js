@@ -2,6 +2,8 @@ var widgetCount = 0;
 
 var viewCoercers = {};
 
+var SUBELEMS = ".inedit, .ind-view, .ind-spinner, .ind-btn-ok, .ind-btn-cancel";
+
 /**
  * Builds the options to pass to a Template from an *inedit*'s options
  * @param widgetOpts
@@ -29,21 +31,15 @@ function buildView(ind) {
   return ind.coerce(ind.$el.val(), ind.options);
 }
 
-function $subelems(ind) {
-  var idSel = indIdSelector(ind);
-  return $(".inedit" + idSel + ", .ind-view" + idSel +
-    ", .ind-btn-ok" + idSel + ", .ind-btn-cancel" + idSel +
-    ", .ind-spinner" + idSel);
-}
-
 function InEdit(el, options) {
   this.$el = $(el);
-  this.options = $.extend({}, options);
+  this.options = $.extend({ type: this.$el.attr("type") }, options);
   this.widgetId = "ind-" + (++widgetCount);
   this.$el.addClass("inedit")
     .attr("data-ind-id", this.widgetId);
   this.tpl = new Template(this.widgetId, tplOpts(this.options));
-  this.coerce = viewCoercers.native;
+  console.log("coercer", this.options.type || "native")
+  this.coerce = viewCoercers[this.options.type || "native"] || viewCoercers.native;
   this.initialize();
 
   console.log("widgetId", this.widgetId);
@@ -56,6 +52,7 @@ InEdit.DEFAULTS = {
   cancel: "cancel",
   viewEl: "span",
   viewClass: "",
+  viewEmptyClass: "text-muted",
   spinnerUrl: "spinner.gif", // http://preloaders.net/en/circular/2
   spinnerClass: "",
   async: true,
@@ -72,10 +69,11 @@ InEdit.prototype.initialize = function () {
   console.log("ok", this.tpl.ok())
   console.log("opts", this.options)
 
-  this.$el.after(this.tpl.view(buildView(this)))
+  this.$el.after(this.tpl.view())
     .after(this.tpl.ok())
     .after(this.tpl.cancel())
     .after(this.tpl.spinner());
+  this.renderView();
 };
 
 InEdit.prototype.$ = function (selector) {
@@ -83,13 +81,21 @@ InEdit.prototype.$ = function (selector) {
 };
 
 InEdit.prototype.renderView = function () {
-  this.$(".ind-view").html(buildView(this));
+  var html  = buildView(this);
+  var $container = this.$(".ind-view");
+  if (!html || html === "") {
+    html = this.options.viewPlaceholder;
+    $container.addClass(this.options.viewEmptyClass);
+  } else {
+    $container.removeClass(this.options.viewEmptyClass);
+  }
+  $container.html(html);
   return this;
 };
 
 InEdit.prototype.edit = function (event) {
   console.log("edit", arguments);
-  $subelems(this).addClass("editing");
+  this.$(SUBELEMS).addClass("editing");
 };
 
 InEdit.prototype.submit = function (event) {
@@ -98,7 +104,7 @@ InEdit.prototype.submit = function (event) {
   var newValue = this.$el.val();
   var previousValue = this.$el.attr("value");
 
-  $subelems(this).addClass("validating")
+  this.$(SUBELEMS).addClass("validating")
     .removeClass("editing");
 
   if (this.options.async === true) {
@@ -123,7 +129,7 @@ InEdit.prototype.submit = function (event) {
 InEdit.prototype.cancel = function (event) {
   console.log("cancel", arguments);
   this.$el.val(this.$el.attr("value"));
-  $subelems(this).removeClass("editing validating");
+  this.$(SUBELEMS).removeClass("editing validating");
 };
 
 InEdit.prototype.rollback = function () {
@@ -136,7 +142,7 @@ InEdit.prototype.commit = function () {
   this.$el.attr("value", newValue);
   this.renderView();
 
-  $subelems(this).removeClass("validating");
+  this.$(SUBELEMS).removeClass("validating");
 
   this.$el.trigger("inedit:commit", {
     source: arguments[0],
@@ -147,6 +153,9 @@ InEdit.prototype.commit = function () {
   });
 };
 
+/**
+ * Removes inedit functionality from this object's targeted element
+ */
 InEdit.prototype.remove = function () {
   this.$(".ind-view, .ind-spinner, .ind-btn-ok, .ind-btn-cancel").remove();
   this.$el.removeClass("inedit").removeAttr("data-ind-id");
@@ -158,7 +167,9 @@ InEdit.coerce("native", function (value, options) {
 });
 
 var localeDateTimeCoercer = function (value, options) {
+  if (!value || value === "") return undefined;
   return (new Date(value)).toLocaleDateString(navigator.language);
 };
 InEdit.coerce("date", localeDateTimeCoercer);
 InEdit.coerce("datetime", localeDateTimeCoercer);
+

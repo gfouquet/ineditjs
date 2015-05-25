@@ -42,6 +42,7 @@ define(["jquery", "InEdit"], function ($, InEdit) {
         ind = new InEdit($el, opts);
         expect($(".ind-btn.ind-btn-cancel[data-ind-id]:button").length).toBe(1);
       });
+
     });
 
     describe("destroying", function () {
@@ -57,7 +58,7 @@ define(["jquery", "InEdit"], function ($, InEdit) {
     });
 
     describe("api", function () {
-      it("should select subcomponents", function () {
+      it("$ should select subelements", function () {
         $("body").append($("<input id='ind-text' type='text' />"));
         var $el = $("#ind-text");
         var ind = new InEdit($el, opts);
@@ -67,6 +68,7 @@ define(["jquery", "InEdit"], function ($, InEdit) {
         expect(ind.$(".ind-spinner").data("ind-id")).toBe(id);
         expect(ind.$(".ind-btn-ok").data("ind-id")).toBe(id);
         expect(ind.$(".ind-btn-cancel").data("ind-id")).toBe(id);
+        expect(ind.$(".inedit").data("ind-id")).toBe(id);
       });
     });
 
