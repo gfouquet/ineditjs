@@ -57,6 +57,7 @@ function Template(widgetId, options) {
  * @returns {*} The html string for the view
  */
 Template.prototype.view = function (label) {
+  // TODO should build the wrapper with empty content and not bothering, not used that much anymore
   label = label === "" ? this.options.viewPlaceholder : label;
   console.log("view label", label);
 

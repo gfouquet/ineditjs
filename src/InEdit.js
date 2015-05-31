@@ -60,6 +60,14 @@ InEdit.DEFAULTS = {
   viewPlaceholder: "Click to edit..."
 };
 
+InEdit.coercers = function () {
+  return $.extend({}, viewCoercers);
+};
+
+InEdit.coercer = function (name) {
+  return viewCoercers[name];
+};
+
 InEdit.coerce = function (name, coercer) {
   viewCoercers[name] = coercer;
 };
@@ -81,7 +89,7 @@ InEdit.prototype.$ = function (selector) {
 };
 
 InEdit.prototype.renderView = function () {
-  var html  = buildView(this);
+  var html = buildView(this);
   var $container = this.$(".ind-view");
   if (!html || html === "") {
     html = this.options.viewPlaceholder;
@@ -166,10 +174,23 @@ InEdit.coerce("native", function (value, options) {
   return escapeHtml(value);
 });
 
-var localeDateTimeCoercer = function (value, options) {
-  if (!value || value === "") return undefined;
-  return (new Date(value)).toLocaleDateString(navigator.language);
-};
-InEdit.coerce("date", localeDateTimeCoercer);
-InEdit.coerce("datetime", localeDateTimeCoercer);
+function localDateTimeCoercer(format) {
+  if (!localDateTimeCoercer.timeZonePostfix) {
+    var off = new Date().getTimezoneOffset();
+    console.log(off)
+    var sign = off < 0 ? "+" : "-";
+    off = Math.abs(off);
+    var hrs = Math.floor(off * 100 / 60);
+    var min = off % 60;
+    localDateTimeCoercer.timeZonePostfix = sign + (hrs > 9 ? "0" : "") + (hrs + min);
+  }
+
+  return function (value, options) {
+    if (!value || value === "") return undefined;
+
+    return format(new Date(value + localDateTimeCoercer.timeZonePostfix));
+  };
+}
+InEdit.coerce("date", localDateTimeCoercer(function(date) { return date.toLocaleDateString(navigator.language); }));
+InEdit.coerce("datetime-local", localDateTimeCoercer(function(date) { return date.toLocaleString(navigator.language); }));
 
