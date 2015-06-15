@@ -2,6 +2,8 @@ var widgetCount = 0;
 
 var viewCoercers = {};
 
+var controlTypes = {};
+
 var SUBELEMS = ".inedit, .ind-view, .ind-spinner, .ind-btn-ok, .ind-btn-cancel";
 
 /**
@@ -40,6 +42,9 @@ function InEdit(el, options) {
   this.tpl = new Template(this.widgetId, tplOpts(this.options));
   console.log("coercer", this.options.type || "native")
   this.coerce = viewCoercers[this.options.type || "native"] || viewCoercers.native;
+  console.log("type", this.options.type || "native")
+  this.type = controlTypes[this.options.type || "native"] || controlTypes.native;
+  this.control = new this.type(this, this.$el, this.options);
   this.initialize();
 
   console.log("widgetId", this.widgetId);
@@ -72,10 +77,12 @@ InEdit.coerce = function (name, coercer) {
   viewCoercers[name] = coercer;
 };
 
+InEdit.control = function(name, prototype) {
+  controlTypes[name] = Control.extend(prototype);
+};
+
 InEdit.prototype.initialize = function () {
-  // console.log(this.$el);
-  console.log("ok", this.tpl.ok())
-  console.log("opts", this.options)
+  this.control.initialize();
 
   this.$el.after(this.tpl.view())
     .after(this.tpl.ok())
@@ -177,7 +184,6 @@ InEdit.coerce("native", function (value, options) {
 function localDateTimeCoercer(format) {
   if (!localDateTimeCoercer.timeZonePostfix) {
     var off = new Date().getTimezoneOffset();
-    console.log(off)
     var sign = off < 0 ? "+" : "-";
     off = Math.abs(off);
     var hrs = Math.floor(off * 100 / 60);
@@ -191,6 +197,11 @@ function localDateTimeCoercer(format) {
     return format(new Date(value + localDateTimeCoercer.timeZonePostfix));
   };
 }
-InEdit.coerce("date", localDateTimeCoercer(function(date) { return date.toLocaleDateString(navigator.language); }));
-InEdit.coerce("datetime-local", localDateTimeCoercer(function(date) { return date.toLocaleString(navigator.language); }));
+InEdit.coerce("date", localDateTimeCoercer(function (date) {
+  return date.toLocaleDateString(navigator.language);
+}));
+InEdit.coerce("datetime-local", localDateTimeCoercer(function (date) {
+  return date.toLocaleString(navigator.language);
+}));
 
+InEdit.control("native", {});

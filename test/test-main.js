@@ -23,14 +23,19 @@ require.config({
       exports: "Template"
     },
     InEdit: {
-      deps: ["jquery", "Template"],
+      deps: ["jquery", "Template", "Control"],
       exports: "InEdit"
+    },
+    Control: {
+      deps: ["jquery"],
+      exports: "Control"
     }
   },
   paths: {
     jquery: "bower_components/jquery/jquery",
     Template: "src/Template",
-    InEdit: "src/InEdit"
+    InEdit: "src/InEdit",
+    Control: "src/Control"
   },
   packages: [],
 

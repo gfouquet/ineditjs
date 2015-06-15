@@ -20,5 +20,6 @@ $(document).on("click", ".ind-btn.ind-btn-cancel", function(event) {
 });
 
 $(function() {
+  console.log("domready")
   $(".inedit").inedit();
 });

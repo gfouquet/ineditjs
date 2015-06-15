@@ -11,6 +11,7 @@
   "use strict";
 
   // @include ../Template.js
+  // @include ../Control.js
   // @include ../InEdit.js
   // @include ../plugin.js
   // @include ../api.js
