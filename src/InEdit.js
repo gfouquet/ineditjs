@@ -40,9 +40,9 @@ function InEdit(el, options) {
   this.$el.addClass("inedit")
     .attr("data-ind-id", this.widgetId);
   this.tpl = new Template(this.widgetId, tplOpts(this.options));
-  console.log("coercer", this.options.type || "native")
+  console.log("coercer", this.options.type || "native");
   this.coerce = viewCoercers[this.options.type || "native"] || viewCoercers.native;
-  console.log("type", this.options.type || "native")
+  console.log("type", this.options.type || "native");
   this.type = controlTypes[this.options.type || "native"] || controlTypes.native;
   this.control = new this.type(this, this.$el, this.options);
   this.initialize();
@@ -77,12 +77,16 @@ InEdit.coerce = function (name, coercer) {
   viewCoercers[name] = coercer;
 };
 
-InEdit.control = function(name, prototype) {
+InEdit.control = function (name, prototype) {
   controlTypes[name] = Control.extend(prototype);
 };
 
 InEdit.prototype.initialize = function () {
-  this.control.initialize();
+  var def = $.Deferred();
+  // control init might be async so we use a promise
+  def.then(this.control.initialize.bind(this.control))
+    .then(this.control.hide.bind(this.control));
+  def.resolve();
 
   this.$el.after(this.tpl.view())
     .after(this.tpl.ok())
@@ -110,6 +114,7 @@ InEdit.prototype.renderView = function () {
 
 InEdit.prototype.edit = function (event) {
   console.log("edit", arguments);
+  this.control.show();
   this.$(SUBELEMS).addClass("editing");
 };
 

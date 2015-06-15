@@ -9,6 +9,8 @@ define(["jquery", "Control"], function ($, Control) {
       expect(extProto.cancel).toBeDefined();
       expect(extProto.validate).toBeDefined();
       expect(extProto.remove).toBeDefined();
+      expect(extProto.show).toBeDefined();
+      expect(extProto.hide).toBeDefined();
     });
 
     it("should have default methods", function () {
@@ -20,6 +22,8 @@ define(["jquery", "Control"], function ($, Control) {
       expect(inst.cancel).toBeDefined();
       expect(inst.validate).toBeDefined();
       expect(inst.remove).toBeDefined();
+      expect(inst.show).toBeDefined();
+      expect(inst.hide).toBeDefined();
     });
   });
 });

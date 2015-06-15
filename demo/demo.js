@@ -37,10 +37,12 @@ require(["jquery", "polyfiller", "tinymce", "../lib/inedit.js"], function ($, we
   $.fn.inedit.Constructor.control("tinymce", {
     initialize: function () {
       console.log("init mce");
+      // apparently, init is async. We shall return a promise so that the control is hidden when available
+      var def = $.Deferred();
       tinymce.on("AddEditor", function (event) {
         console.log("add editor", arguments);
-        event.editor.on("init", function(event) {
-          this.hide();
+        event.editor.on("init", function (event) {
+          def.resolve(event.editor);
         });
       });
       tinymce.init({
@@ -54,6 +56,13 @@ require(["jquery", "polyfiller", "tinymce", "../lib/inedit.js"], function ($, we
           });
         }
       });
+      return def;
+    },
+    show: function () {
+      tinymce.get("tinymce").show();
+    },
+    hide: function () {
+      tinymce.get("tinymce").hide();
     },
     edit: function () {
     },

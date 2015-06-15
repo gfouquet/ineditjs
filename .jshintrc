@@ -19,6 +19,7 @@
     "exports": true,
     "InEdit": true,
     "Template": true,
+    "Control": true,
     "console": true
   }
 }

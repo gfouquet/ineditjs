@@ -24,6 +24,14 @@ Control.prototype.remove = function () {
   console.log("remove control", this.options.type);
 };
 
+Control.prototype.show = function () {
+  console.log("show control", this.options.type);
+};
+
+Control.prototype.hide = function () {
+  console.log("hide control", this.options.type);
+};
+
 Control.extend = function (proto) {
   var parent = this;
   var child = function () {
