@@ -45,6 +45,7 @@ function InEdit(el, options) {
   console.log("type", this.options.type || "native");
   this.type = controlTypes[this.options.type || "native"] || controlTypes.native;
   this.control = new this.type(this, this.$el, this.options);
+  console.log("TRACE created control for widget", this.widgetId, this.control);
   this.initialize();
 
   console.log("widgetId", this.widgetId);
@@ -82,10 +83,12 @@ InEdit.control = function (name, prototype) {
 };
 
 InEdit.prototype.initialize = function () {
+  var control = this.control;
   var def = $.Deferred();
+  console.log("TRACE Will bind context to control.initialize", control.initialize, control.initialize.bind)
   // control init might be async so we use a promise
-  def.then(this.control.initialize.bind(this.control))
-    .then(this.control.hide.bind(this.control));
+  def.then(control.initialize.bind(control))
+    .then(control.hide.bind(control));
   def.resolve();
 
   this.$el.after(this.tpl.view())
@@ -114,7 +117,7 @@ InEdit.prototype.renderView = function () {
 
 InEdit.prototype.edit = function (event) {
   console.log("edit", arguments);
-  this.control.show();
+  this.control.edit();
   this.$(SUBELEMS).addClass("editing");
 };
 
@@ -148,7 +151,7 @@ InEdit.prototype.submit = function (event) {
 
 InEdit.prototype.cancel = function (event) {
   console.log("cancel", arguments);
-  this.$el.val(this.$el.attr("value"));
+  this.control.cancel();
   this.$(SUBELEMS).removeClass("editing validating");
 };
 
@@ -178,7 +181,7 @@ InEdit.prototype.commit = function () {
  */
 InEdit.prototype.remove = function () {
   this.$(".ind-view, .ind-spinner, .ind-btn-ok, .ind-btn-cancel").remove();
-  this.$el.removeClass("inedit").removeAttr("data-ind-id");
+  this.control.remove();
 };
 
 // Initialize InEdit
@@ -209,4 +212,5 @@ InEdit.coerce("datetime-local", localDateTimeCoercer(function (date) {
   return date.toLocaleString(navigator.language);
 }));
 
-InEdit.control("native", {});
+InEdit.control("native", {
+});

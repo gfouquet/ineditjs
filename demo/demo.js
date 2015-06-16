@@ -42,7 +42,8 @@ require(["jquery", "polyfiller", "tinymce", "../lib/inedit.js"], function ($, we
       tinymce.on("AddEditor", function (event) {
         console.log("add editor", arguments);
         event.editor.on("init", function (event) {
-          def.resolve(event.editor);
+          this.initialContent = this.getContent();
+          def.resolve(this);
         });
       });
       tinymce.init({
@@ -58,15 +59,16 @@ require(["jquery", "polyfiller", "tinymce", "../lib/inedit.js"], function ($, we
       });
       return def;
     },
-    show: function () {
-      tinymce.get("tinymce").show();
-    },
     hide: function () {
       tinymce.get("tinymce").hide();
     },
     edit: function () {
+      tinymce.get("tinymce").show();
     },
     cancel: function () {
+      var ed = tinymce.get("tinymce")
+      ed.setContent(ed.initialContent);
+      ed.hide();
     },
     validate: function () {
     },

@@ -14,6 +14,15 @@ Object.keys(window.__karma__.files).forEach(function(file) {
 
 console.log("Test files", allTestFiles);
 
+// There is no Function.bind in phantomjs < 2
+// The following shim will do
+Function.prototype.bind = function(ctx) {
+  var func = this;
+  return function() {
+    return func.apply(ctx, arguments);
+  };
+};
+
 require.config({
   // Karma serves files under /base, which is the basePath from your config file
   baseUrl: "/base",

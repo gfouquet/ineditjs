@@ -1,4 +1,17 @@
 define(["jquery", "Control"], function ($, Control) {
+  describe("Control", function () {
+    it("should remove inedit data from its $el", function () {
+      $("body").append($("<input id='ind-text' type='text' class='inedit' data-ind-id = 'indid' />"));
+      var $el = $("#ind-text");
+
+      var ctrl = new Control({}, $el);
+      ctrl.remove();
+
+      expect($el.hasClass("inedit")).toBeFalsy();
+      expect($el.attr("data-ind-id")).toBeUndefined();
+    });
+  });
+
   describe("Extended Control", function () {
     it("should have default prototype methods", function () {
       var extended = Control.extend({});
@@ -9,7 +22,6 @@ define(["jquery", "Control"], function ($, Control) {
       expect(extProto.cancel).toBeDefined();
       expect(extProto.validate).toBeDefined();
       expect(extProto.remove).toBeDefined();
-      expect(extProto.show).toBeDefined();
       expect(extProto.hide).toBeDefined();
     });
 
@@ -22,7 +34,6 @@ define(["jquery", "Control"], function ($, Control) {
       expect(inst.cancel).toBeDefined();
       expect(inst.validate).toBeDefined();
       expect(inst.remove).toBeDefined();
-      expect(inst.show).toBeDefined();
       expect(inst.hide).toBeDefined();
     });
   });

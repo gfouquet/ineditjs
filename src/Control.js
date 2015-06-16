@@ -6,14 +6,18 @@ function Control(ind, $el, options) {
 
 Control.prototype.initialize = function () {
   console.log("initialize control", this.options.type);
+  // return promise
 };
 
 Control.prototype.edit = function () {
   console.log("edit control", this.options.type);
+  this.$el.addClass("editing");
 };
 
 Control.prototype.cancel = function () {
   console.log("cancel control", this.options.type);
+  this.$el.val(this.$el.attr("value"));
+  this.$el.removeClass("editing validating");
 };
 
 Control.prototype.validate = function () {
@@ -22,10 +26,7 @@ Control.prototype.validate = function () {
 
 Control.prototype.remove = function () {
   console.log("remove control", this.options.type);
-};
-
-Control.prototype.show = function () {
-  console.log("show control", this.options.type);
+  this.$el.removeClass("inedit").removeAttr("data-ind-id");
 };
 
 Control.prototype.hide = function () {
