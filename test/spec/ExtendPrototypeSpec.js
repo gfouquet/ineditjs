@@ -1,4 +1,6 @@
 define(["jquery"], function ($) {
+  "use strict";
+
   describe("Extended prototype", function () {
     var Ctor = function (opt) {
       this.option = opt;

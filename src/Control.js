@@ -17,7 +17,7 @@ Control.prototype.edit = function () {
 Control.prototype.cancel = function () {
   console.log("cancel control", this.options.type);
   this.$el.val(this.$el.attr("value"));
-  this.$el.removeClass("editing validating");
+  //this.$el.removeClass("editing validating");
 };
 
 Control.prototype.validate = function () {
@@ -26,10 +26,14 @@ Control.prototype.validate = function () {
 
 Control.prototype.remove = function () {
   console.log("remove control", this.options.type);
-  this.$el.removeClass("inedit").removeAttr("data-ind-id");
+  //this.$el.removeClass("inedit").removeAttr("data-ind-id");
 };
 
-Control.prototype.hide = function () {
+Control.prototype.value = function () {
+  return this.$el.val();
+};
+
+Control.prototype.apply = function () {
   console.log("hide control", this.options.type);
 };
 

@@ -1,4 +1,5 @@
 define(["jquery", "InEdit"], function ($, InEdit) {
+  "use strict";
 
   describe("InEdit", function () {
     var opts = $.extend({}, InEdit.DEFAULTS);
@@ -46,6 +47,11 @@ define(["jquery", "InEdit"], function ($, InEdit) {
     });
 
     describe("destroying", function () {
+      afterEach(function () {
+        $("#ind-text").data("ind-inst", undefined)
+          .remove();
+      });
+
       it("should remove buttons, spinner and view", function () {
         $("body").append($("<input id='ind-text' type='text' />"));
         var $el = $("#ind-text");
@@ -54,10 +60,18 @@ define(["jquery", "InEdit"], function ($, InEdit) {
         ind.remove();
 
         expect($("[data-ind-id]").length).toBe(0);
+        expect($el.hasClass("inedit")).toBeFalsy();
+        expect($el.attr("data-ind-id")).toBeUndefined();
       });
+
     });
 
     describe("api", function () {
+      afterEach(function () {
+        $("#ind-text").data("ind-inst", undefined)
+          .remove();
+      });
+
       it("$ should select subelements", function () {
         $("body").append($("<input id='ind-text' type='text' />"));
         var $el = $("#ind-text");

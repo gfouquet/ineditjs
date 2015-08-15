@@ -59,7 +59,7 @@ require(["jquery", "polyfiller", "tinymce", "../lib/inedit.js"], function ($, we
       });
       return def;
     },
-    hide: function () {
+    apply: function () {
       tinymce.get("tinymce").hide();
     },
     edit: function () {
@@ -68,7 +68,7 @@ require(["jquery", "polyfiller", "tinymce", "../lib/inedit.js"], function ($, we
     cancel: function () {
       var ed = tinymce.get("tinymce")
       ed.setContent(ed.initialContent);
-      ed.hide();
+      this.apply();
     },
     validate: function () {
     },

@@ -1,14 +1,35 @@
 define(["jquery", "Control"], function ($, Control) {
+  "use strict";
+
   describe("Control", function () {
-    it("should remove inedit data from its $el", function () {
-      $("body").append($("<input id='ind-text' type='text' class='inedit' data-ind-id = 'indid' />"));
-      var $el = $("#ind-text");
+    var $el;
 
+    beforeEach(function () {
+      $("body").append($("<input id='ind-text' type='text' />"));
+      $el = $("#ind-text");
+    });
+
+    afterEach(function () {
+      $el.remove();
+    });
+
+
+    it("should get the input's value", function () {
+      // given an input with a value
+      $el.attr("value", "batman");
+
+      // when
       var ctrl = new Control({}, $el);
-      ctrl.remove();
 
-      expect($el.hasClass("inedit")).toBeFalsy();
-      expect($el.attr("data-ind-id")).toBeUndefined();
+      // then
+      expect(ctrl.value()).toBe("batman");
+
+      // and when user types new value
+      $el.attr("value", "robin");
+
+      // then
+      expect(ctrl.value()).toBe("robin");
+
     });
   });
 
@@ -22,7 +43,7 @@ define(["jquery", "Control"], function ($, Control) {
       expect(extProto.cancel).toBeDefined();
       expect(extProto.validate).toBeDefined();
       expect(extProto.remove).toBeDefined();
-      expect(extProto.hide).toBeDefined();
+      expect(extProto.apply).toBeDefined();
     });
 
     it("should have default methods", function () {
@@ -34,7 +55,7 @@ define(["jquery", "Control"], function ($, Control) {
       expect(inst.cancel).toBeDefined();
       expect(inst.validate).toBeDefined();
       expect(inst.remove).toBeDefined();
-      expect(inst.hide).toBeDefined();
+      expect(inst.apply).toBeDefined();
     });
   });
 });

@@ -84,12 +84,10 @@ InEdit.control = function (name, prototype) {
 
 InEdit.prototype.initialize = function () {
   var control = this.control;
-  var def = $.Deferred();
-  console.log("TRACE Will bind context to control.initialize", control.initialize, control.initialize.bind)
-  // control init might be async so we use a promise
-  def.then(control.initialize.bind(control))
-    .then(control.hide.bind(control));
-  def.resolve();
+  // control init might be async so we use a resolved promise ($.when())
+  // in order that control has the opportunity to feed .then() with a promise
+  $.when().then(control.initialize.bind(control))
+    .then(control.apply.bind(control));
 
   this.$el.after(this.tpl.view())
     .after(this.tpl.ok())
@@ -117,23 +115,28 @@ InEdit.prototype.renderView = function () {
 
 InEdit.prototype.edit = function (event) {
   console.log("edit", arguments);
+  this.previousValue = this.control.value();
   this.control.edit();
+  this.control.$el.addClass("editing");
   this.$(SUBELEMS).addClass("editing");
 };
 
 InEdit.prototype.submit = function (event) {
   console.log("submit", arguments);
 
-  var newValue = this.$el.val();
-  var previousValue = this.$el.attr("value");
+  var newValue = this.control.value();
+  var previousValue = this.previousValue;
 
+  this.$el.addClass("validating").removeClass("editing");
   this.$(SUBELEMS).addClass("validating")
     .removeClass("editing");
 
-  if (this.options.async === true) {
-    var state = $.Deferred();
-    state.done(this.commit.bind(this))
-      .fail(this.rollback.bind(this));
+  var control = this.control;
+
+  // triggerValidate shall be a .then() arg : in async mode
+  // it returns a promise which the event client is responsible for rejecting / resolving
+  var triggerValidate = (function () {
+    var state = !!this.options.async ? $.Deferred() : undefined;
 
     this.$el.trigger("inedit:validate", {
       source: event,
@@ -141,12 +144,15 @@ InEdit.prototype.submit = function (event) {
       widgetId: this.widgetId,
       value: newValue,
       previous: previousValue,
-      state: state
+      state: state // TODO hide deferred api other than resolve / reject when in async mode
     });
-  } else {
-    this.commit(event);
-  }
 
+    return state;
+  }).bind(this);
+
+  $.when().then(control.validate.bind(control))
+    .then(triggerValidate)
+    .then(this.commit.bind(this), this.rollback.bind(this));
 };
 
 InEdit.prototype.cancel = function (event) {
@@ -163,6 +169,7 @@ InEdit.prototype.commit = function () {
   var newValue = this.$el.val();
   var previousValue = this.$el.attr("value");
   this.$el.attr("value", newValue);
+  this.control.apply();
   this.renderView();
 
   this.$(SUBELEMS).removeClass("validating");
@@ -181,6 +188,7 @@ InEdit.prototype.commit = function () {
  */
 InEdit.prototype.remove = function () {
   this.$(".ind-view, .ind-spinner, .ind-btn-ok, .ind-btn-cancel").remove();
+  this.control.$el.removeClass("inedit").removeAttr("data-ind-id");
   this.control.remove();
 };
 
@@ -212,5 +220,4 @@ InEdit.coerce("datetime-local", localDateTimeCoercer(function (date) {
   return date.toLocaleString(navigator.language);
 }));
 
-InEdit.control("native", {
-});
+InEdit.control("native", {});
